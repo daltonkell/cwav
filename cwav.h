@@ -10,8 +10,9 @@ typedef struct
 typedef struct
 {
     // TODO add fields
-    char chunk_id[4]; // "fmt "
-} FMT_CHUNK;
+    char chunk_id[4]; // "fmt "; NOTE ennd char is blank, NOT \0
+    int chunk_size;   // 16, 18, 40
+} CHUNK;
 
 
 /* Read the header information from a .wav file into a HEADER struct
@@ -34,3 +35,18 @@ void read_header(FILE * fp, HEADER * header);
  *   void
  */
 void print_header(HEADER * header_ptr);
+
+/* Read bytes from a .wav file for one chunk of a .wav file
+ * into a CHUNK struct.
+ *
+ * Args:
+ *   FILE * fp: pointer to open .wav file
+ *   CHUNK * chunk: pointer to CHUNK struct
+ *
+ * Returns:
+ *   void
+ */
+void read_chunk(FILE * fp, CHUNK * chunk);
+
+/* Print chunk information */
+void print_chunk(CHUNK * chunk);

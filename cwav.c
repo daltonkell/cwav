@@ -35,7 +35,26 @@ void print_header(HEADER * header_ptr)
     }
     printf("\n");
     printf("---------------------------------\n");
-    
+}
+
+/* Define read_chunk */
+void read_chunk(FILE * fp, CHUNK * chunk)
+{
+
+    int nread = 0;
+    nread = fread(chunk->chunk_id, sizeof(chunk->chunk_id), 1, fp);
+    nread = fread(&chunk->chunk_size, sizeof(chunk->chunk_size), 1, fp);
+}
+
+/* Define print_chunk */
+void print_chunk(CHUNK * chunk)
+{
+    for (int i=0; i<4; ++i)
+    {
+        printf("%c", chunk->chunk_id[i]);
+    }
+    printf("\n");
+    printf("Size of chunk (bytes): %i\n", chunk->chunk_size);
 }
 
 int main()
@@ -61,13 +80,16 @@ int main()
     // display header
     print_header(header_ptr);
 
-    int nread = 0;
-    char chunk_id[4]; // "fmt " includes \0
-    nread = fread(chunk_id, sizeof(chunk_id), 1, fp);
-    printf("Next chunk_id: %s\n", chunk_id);
+    // for now, read only a single chunk
+    CHUNK * chunk_ptr = malloc(sizeof(CHUNK));
+    read_chunk(fp, chunk_ptr);
+
+    // displau chunk
+    print_chunk(chunk_ptr);
     
     // memory management
     free(header_ptr);
+    free(chunk_ptr);
     fclose(fp);
 
     return 0;
