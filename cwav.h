@@ -24,3 +24,13 @@ typedef struct
  *   void
  */
 void read_header(FILE * fp, HEADER * header);
+
+/* Print the contents of a HEADER struct
+ *
+ * Args:
+ *   HEADER * hp: pointer to HEADER struct
+ *
+ * Returns:
+ *   void
+ */
+void print_header(HEADER * header_ptr);
