@@ -1,19 +1,9 @@
-/* Read a .wav file
- * Spec:
- *   www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
- *   www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf
- *   soundfile.sapp.org/doc/WaveFormat
- * Kind of taking from this (esp. bit shift):
- *   www.truelogic.org/wordpress/2015/09/04/parsing-a-wav-file-in-c/ thanks, amit
- * File:
- *   https://freewavesamples.com/ensoniq-esq-1-brass-ensemble-c4
- */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "cwav.h"
 
-struct HEADER * read_header(FILE * fp, HEADER * header)
+void read_header(FILE * fp, HEADER * header)
 {
     int nread = 0;
 

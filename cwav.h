@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 typedef struct
 {
     char ckID[4];              // chunk ID "RIFF"
@@ -10,3 +12,15 @@ typedef struct
     // TODO add fields
     char chunk_id[4]; // "fmt "
 } FMT_CHUNK;
+
+
+/* Read the header information from a .wav file into a HEADER struct
+ *
+ * Args:
+ *   FILE * fp      : pointer to open .wav file
+ *   HEADER * header: pointer to HEADER struct
+ *
+ * Returns:
+ *   void
+ */
+void read_header(FILE * fp, HEADER * header);
