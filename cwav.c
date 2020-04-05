@@ -44,6 +44,21 @@ void read_chunk(FILE * fp, CHUNK * chunk)
     int nread = 0;
     nread = fread(chunk->chunk_id, sizeof(chunk->chunk_id), 1, fp);
     nread = fread(&chunk->chunk_size, sizeof(chunk->chunk_size), 1, fp);
+    nread = fread(&chunk->fmt_code, sizeof(chunk->fmt_code), 1, fp);
+    nread = fread(&chunk->n_channels, sizeof(chunk->n_channels), 1, fp);
+    nread = fread(&chunk->samples_per_sec, sizeof(chunk->samples_per_sec), 1, fp);
+    nread = fread(&chunk->avg_bytes_per_sec, sizeof(chunk->avg_bytes_per_sec), 1, fp);
+    nread = fread(&chunk->block_align, sizeof(chunk->block_align), 1, fp);
+    nread = fread(&chunk->bits_per_sample, sizeof(chunk->bits_per_sample), 1, fp);
+
+    /* if PCM format, skip these last 4 fields */
+    if (chunk->fmt_code!=1)
+    {
+        nread = fread(&chunk->cb_size, sizeof(chunk->cb_size), 1, fp);
+        nread = fread(&chunk->valid_bits_per_sample, sizeof(chunk->valid_bits_per_sample), 1, fp);
+        nread = fread(&chunk->channel_mask, sizeof(chunk->channel_mask), 1, fp);
+        nread = fread(chunk->sub_format, sizeof(chunk->sub_format), 1, fp);
+    }
 }
 
 /* Define print_chunk */
@@ -54,7 +69,29 @@ void print_chunk(CHUNK * chunk)
         printf("%c", chunk->chunk_id[i]);
     }
     printf("\n");
+
     printf("Size of chunk (bytes): %i\n", chunk->chunk_size);
+    printf("Format code: %#x\n", chunk->fmt_code);
+    printf("Number interleaved channels: %d\n", chunk->n_channels);
+    printf("Sampling rate (blocks/sec): %d\n", chunk->samples_per_sec);
+    printf("Data rate (avg bytes/sec): %d\n", chunk->avg_bytes_per_sec);
+    printf("Data block size (bytes): %d\n", chunk->block_align);
+    printf("Bits per sample: %d\n", chunk->bits_per_sample);
+
+    if (chunk->fmt_code!=1)
+    {
+        printf("Extension size (0 or 22?): %#x\n", chunk->cb_size);
+        printf("Valid bits per sample: %d\n", chunk->valid_bits_per_sample);
+        printf("Speaker position mask: %d\n", chunk->channel_mask);
+
+        printf("Sub format: ");
+        for (int i=0; i<16; ++i)
+        {
+            printf("%c", chunk->sub_format[i]);
+        }
+        printf("\n");
+    }
+
 }
 
 int main()
@@ -87,6 +124,8 @@ int main()
     // displau chunk
     print_chunk(chunk_ptr);
     
+    // if PCM format, proceed to data chunk
+
     // memory management
     free(header_ptr);
     free(chunk_ptr);
